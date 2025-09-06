@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User list</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .add-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
+        .add-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .edit-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        .edit-button:hover {
+            background-color: #218838;
+            transform: translateY(-1px);
+        }
+        .delete-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+            transform: translateY(-1px);
+        }
+        .delete-form {
+            display: inline;
+            margin: 0;
+            padding: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #495057;
+            border-right: 1px solid #dee2e6;
+            font-size: 16px;
+            padding: 18px 16px;
+        }
+        th:last-child {
+            border-right: none;
+        }
+        td {
+            border-right: 1px solid #e9ecef;
+            font-size: 15px;
+            color: #333;
+        }
+        td:last-child {
+            border-right: none;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+            transition: background-color 0.2s ease;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .empty-message {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 40px;
+            font-size: 18px;
+        }
+        .actions-column {
+            width: 180px;
+            text-align: center;
+        }
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+        .id-column { width: 80px; }
+        .name-column { width: 150px; }
+        .surname-column { width: 150px; }
+        .age-column { width: 100px; }
+        .email-column { width: 250px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>User list</h1>
+
+    <!-- Кнопка добавления пользователя -->
+    <div style="text-align: center; margin-bottom: 25px;">
+        <a th:href="@{/users/new}" class="add-button">Add New User</a>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(users)}">
+        <table>
+            <thead>
+            <tr>
+                <th class="id-column">ID</th>
+                <th class="name-column">Name</th>
+                <th class="surname-column">Surname</th>
+                <th class="age-column">Age</th>
+                <th class="email-column">Email</th>
+                <th class="actions-column">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.surname}"></td>
+                <td th:text="${user.age}"></td>
+                <td th:text="${user.email}"></td>
+                <td>
+                    <div class="actions-cell">
+                        <a th:href="@{/users/edit(id=${user.id})}" class="edit-button">Edit</a>
+                        <a th:href="@{/users/delete(id=${user.id})}"
+                           class="delete-button"
+                           onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:if="${#lists.isEmpty(users)}" class="empty-message">
+        Users not available
+    </div>
+</div>
+
+<script>
+    // Функция подтверждения удаления (спрашивает только один раз)
+    function confirmDelete(event) {
+        if (!confirm('Are you sure you want to delete this user?')) {
+            event.preventDefault(); // Отменяем отправку формы
+            return false;
+        }
+        return true;
+    }
+</script>
+</body>
+</html>
