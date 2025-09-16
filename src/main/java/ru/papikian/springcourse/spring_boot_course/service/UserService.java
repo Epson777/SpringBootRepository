@@ -1,15 +1,13 @@
 package ru.papikian.springcourse.spring_boot_course.service;
 
-
-
-import ru.papikian.springcourse.spring_boot_course.model.User;
+import ru.papikian.springcourse.spring_boot_course.models.User;
 
 import java.util.List;
 
 public interface UserService {
+    void createUser(User user);
     List<User> getAllUsers();
-    void addUser(User user);
-    void deleteUser(Integer id);
     void updateUser(User user);
-    User getUserById(int id);
+    void deleteUserById(Integer id);
+    User getUserById(Integer id);
 }
