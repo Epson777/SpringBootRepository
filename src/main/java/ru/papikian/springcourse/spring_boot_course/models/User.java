@@ -3,6 +3,7 @@ package ru.papikian.springcourse.spring_boot_course.models;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -25,16 +27,19 @@ public class User implements UserDetails {
     @Column(name = "id")
     private int id;
 
+    @Size(min = 3, max = 30, message = "От 3 до 30 символов")
     @Column(name = "username")
     private String username;
 
+    @Size(min = 6, max = 100, message = "Пароль слишком длинный/короткий")
     @Column(name = "password")
     private String password;
 
     @Column(name = "email")
     private String email;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),

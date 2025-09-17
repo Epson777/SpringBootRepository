@@ -1,71 +1,69 @@
 package ru.papikian.springcourse.spring_boot_course.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.papikian.springcourse.spring_boot_course.dao.UserDao;
-import ru.papikian.springcourse.spring_boot_course.models.Role;
 import ru.papikian.springcourse.spring_boot_course.models.User;
-import ru.papikian.springcourse.spring_boot_course.repository.RoleRepository;
+import ru.papikian.springcourse.spring_boot_course.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserDao userDao;
-    private final PasswordEncoder passwordEncoder;
-    private final RoleRepository roleRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
-        this.userDao = userDao;
-        this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
+
 
     @Override
     @Transactional
     public void createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            Role userRole = roleRepository.findByRoleName("ROLE_USER")
-                    .orElseGet(() -> {
-                        Role newRole = new Role("ROLE_USER");
-                        return roleRepository.save(newRole);
-                    });
-            user.setRoles(List.of(userRole)); // Используйте Set
-        }
-        userDao.createUser(user);
+        userRepository.createUser(user);
     }
 
     @Override
     @Transactional
     public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+        return userRepository.getAllUsers();
+    }
+
+    @Override
+    @Transactional
+    public Optional<User> getUserById(Integer id) {
+        return userRepository.getUserByUserId(id);
+    }
+
+    @Override
+    @Transactional
+    public User getUserByUsername(String username) {
+        return userRepository.getUserByUserUsername(username);
     }
 
     @Override
     @Transactional
     public void updateUser(User user) {
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        } else {
-            User existingUser = userDao.getUserById(user.getId());
-            user.setPassword(existingUser.getPassword());
+        userRepository.updateUser(user);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(Integer id) {
+        userRepository.deleteUser(id);
+    }
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.getUserByUserUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
         }
-        userDao.updateUser(user);
-    }
-
-    @Override
-    @Transactional
-    public void deleteUserById(Integer id) {
-        userDao.deleteUserById(id);
-    }
-
-    @Override
-    @Transactional
-    public User getUserById(Integer id) {
-        return userDao.getUserById(id);
+        return user;
     }
 }

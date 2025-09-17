@@ -1,10 +1,15 @@
 package ru.papikian.springcourse.spring_boot_course.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import ru.papikian.springcourse.spring_boot_course.models.User;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByUsername(String username);
+import java.util.List;
+import java.util.Optional;
+
+public interface UserRepository {
+    void createUser(User user);
+    List<User> getAllUsers();
+    Optional<User> getUserByUserId(Integer id);
+    User getUserByUserUsername(String username);
+    void updateUser(User user);
+    void deleteUser(Integer id);
 }
