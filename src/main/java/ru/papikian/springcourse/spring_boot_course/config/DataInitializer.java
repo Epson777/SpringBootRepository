@@ -56,7 +56,7 @@ public class DataInitializer {
                     .orElseThrow(() -> new RuntimeException("ROLE_ADMIN not found"));
             admin.setRoles(Collections.singletonList(adminRole));
 
-            userService.createUser(admin);
+            userService.saveUser(admin);
         }
 
         // Создаем тестового пользователя
@@ -70,7 +70,7 @@ public class DataInitializer {
                     .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
             user.setRoles(Collections.singletonList(userRole));
 
-            userService.createUser(user);
+            userService.saveUser(user);
         }
     }
 }

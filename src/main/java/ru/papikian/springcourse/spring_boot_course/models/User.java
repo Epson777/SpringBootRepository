@@ -35,11 +35,17 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "age")
+    private int age;
+
+    @Column(name = "first_name")
+    private String firstName;
+
     @Column(name = "email")
     private String email;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH,
+            CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -116,6 +122,33 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public User(int id, String username, String password, int age, String firstName, String email, List<Role> roles) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.age = age;
+        this.firstName = firstName;
+        this.email = email;
+        this.roles = roles;
+    }
+
+    public User(String username, String password, int age, String firstName, String email, List<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.age = age;
+        this.firstName = firstName;
+        this.email = email;
+        this.roles = roles;
+    }
+
+    public User(String username, String password, int age, String firstName, String email) {
+        this.username = username;
+        this.password = password;
+        this.age = age;
+        this.firstName = firstName;
+        this.email = email;
+    }
+
     public int getId() {
         return id;
     }
@@ -126,6 +159,22 @@ public class User implements UserDetails {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     @Override

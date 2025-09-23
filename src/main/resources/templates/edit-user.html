@@ -2,50 +2,116 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Edit User</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit User - Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+    }
+    .user-form-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .user-avatar-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0 auto 1rem;
+    }
+  </style>
 </head>
 <body>
-<nav class="navbar navbar-dark bg-dark">
+<!-- Header -->
+<div class="page-header">
   <div class="container">
-    <a class="navbar-brand" href="/admin">← Back to Admin Panel</a>
-    <form th:action="@{/logout}" method="post">
-      <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
-    </form>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <a href="/admin" class="btn btn-light btn-sm mb-2">
+          <i class="bi bi-arrow-left"></i> Back to Admin Panel
+        </a>
+        <h1><i class="bi bi-pencil-square"></i> Edit User</h1>
+        <p class="mb-0">Update user information</p>
+      </div>
+      <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn btn-outline-light btn-sm">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+      </form>
+    </div>
   </div>
-</nav>
+</div>
 
-<div class="container mt-4">
+<div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h4>Edit User</h4>
+    <div class="col-lg-8">
+      <div class="card user-form-card">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0"><i class="bi bi-person-gear"></i> User Information</h5>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
+          <div class="text-center mb-4">
+            <div class="user-avatar-large">
+              <span th:text="${user.username.substring(0,1).toUpperCase()}"></span>
+            </div>
+            <h5 th:text="${user.username}"></h5>
+            <p class="text-muted">User ID: <span th:text="${user.id}"></span></p>
+          </div>
+
           <form th:action="@{/admin/update}" method="post">
             <input type="hidden" name="id" th:value="${user.id}">
 
-            <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input type="text" class="form-control" id="username" name="username"
-                     th:value="${user.username}" required minlength="3" maxlength="30">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="username" class="form-label">Username</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-person"></i></span>
+                  <input type="text" class="form-control" id="username" name="username"
+                         th:value="${user.username}" required minlength="3" maxlength="30">
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Email</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                  <input type="email" class="form-control" id="email" name="email"
+                         th:value="${user.email}" required>
+                </div>
+              </div>
             </div>
 
             <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" name="email"
-                     th:value="${user.email}" required>
+              <label for="password" class="form-label">New Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                <input type="password" class="form-control" id="password" name="password"
+                       placeholder="Leave empty to keep current password">
+              </div>
+              <div class="form-text">
+                <i class="bi bi-info-circle"></i> Only enter a new password if you want to change it
+              </div>
             </div>
 
-            <div class="mb-3">
-              <label for="password" class="form-label">New Password (leave empty to keep current)</label>
-              <input type="password" class="form-control" id="password" name="password">
-            </div>
-
-            <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-warning">Update User</button>
-              <a href="/admin" class="btn btn-secondary">Cancel</a>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a href="/admin" class="btn btn-secondary me-md-2">
+                <i class="bi bi-x-circle"></i> Cancel
+              </a>
+              <button type="submit" class="btn btn-warning">
+                <i class="bi bi-check-circle"></i> Update User
+              </button>
             </div>
           </form>
         </div>
@@ -53,5 +119,7 @@
     </div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

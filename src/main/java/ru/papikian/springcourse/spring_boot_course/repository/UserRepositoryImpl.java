@@ -1,7 +1,5 @@
 package ru.papikian.springcourse.spring_boot_course.repository;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import ru.papikian.springcourse.spring_boot_course.models.User;
 
@@ -16,7 +14,7 @@ public class UserRepositoryImpl implements UserRepository {
     private EntityManager entityManager;
 
     @Override
-    public void createUser(User user) {
+    public void saveUser(User user) {
         entityManager.persist(user);
     }
 
@@ -26,7 +24,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> getUserByUserId(Integer id) {
+    public Optional<User> getUserById(Integer id) {
         try {
             User user = entityManager.createQuery("SELECT u FROM User u WHERE u.id = :id", User.class)
                     .setParameter("id", id)
@@ -34,17 +32,6 @@ public class UserRepositoryImpl implements UserRepository {
             return Optional.of(user);
         } catch (Exception e) {
             return Optional.empty();
-        }
-    }
-
-    @Override
-    public User getUserByUserUsername(String username) {
-        try {
-            return entityManager.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
-                    .setParameter("username", username)
-                    .getSingleResult();
-        } catch (Exception e) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
         }
     }
 
@@ -59,5 +46,12 @@ public class UserRepositoryImpl implements UserRepository {
         if (user != null) {
             entityManager.remove(user);
         }
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
+                .setParameter("username", username)
+                .getSingleResult();
     }
 }

@@ -20,11 +20,10 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-
     @Override
     @Transactional
-    public void createUser(User user) {
-        userRepository.createUser(user);
+    public void saveUser(User user) {
+        userRepository.saveUser(user);
     }
 
     @Override
@@ -36,13 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Optional<User> getUserById(Integer id) {
-        return userRepository.getUserByUserId(id);
-    }
-
-    @Override
-    @Transactional
-    public User getUserByUsername(String username) {
-        return userRepository.getUserByUserUsername(username);
+        return userRepository.getUserById(id);
     }
 
     @Override
@@ -59,11 +52,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public User getUserByUsername(String username) {
+        return userRepository.getUserByUsername(username);
+    }
+
+    @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.getUserByUserUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-        return user;
+        return userRepository.getUserByUsername(username);
     }
 }

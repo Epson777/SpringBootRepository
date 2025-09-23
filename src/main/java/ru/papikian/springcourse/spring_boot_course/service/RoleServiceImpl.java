@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.papikian.springcourse.spring_boot_course.models.Role;
 import ru.papikian.springcourse.spring_boot_course.repository.RoleRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,5 +28,10 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public void saveRole(Role role) {
         roleRepository.saveRole(role);
+    }
+
+    @Override
+    public List<Role> getAllRoles() {
+        return roleRepository.getAllRoles();
     }
 }

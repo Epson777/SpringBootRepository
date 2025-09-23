@@ -70,7 +70,7 @@ public class AuthController {
         user.setRoles(Collections.singletonList(userRole));
 
         // Сохраняем пользователя
-        userService.createUser(user);
+        userService.saveUser(user);
 
         model.addAttribute("successMessage", "Registration successful! Please login.");
         return "auth/login";

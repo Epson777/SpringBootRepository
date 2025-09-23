@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-    void createUser(User user);
+    void saveUser(User user);
     List<User> getAllUsers();
-    Optional<User> getUserByUserId(Integer id);
-    User getUserByUserUsername(String username);
+    Optional<User> getUserById(Integer id);
     void updateUser(User user);
     void deleteUser(Integer id);
+    User getUserByUsername(String username);
 }
